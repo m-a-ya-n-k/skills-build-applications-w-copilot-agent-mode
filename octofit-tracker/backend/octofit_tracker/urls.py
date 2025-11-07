@@ -14,10 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import os
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet, api_root
+
+# Helper to get codespace API base URL
+def get_codespace_api_url():
+    codespace_name = os.environ.get('CODESPACE_NAME')
+    if codespace_name:
+        return f"https://{codespace_name}-8000.app.github.dev/api/"
+    return "http://localhost:8000/api/"
+# Note: Do not hardcode $CODESPACE_NAME. Use os.environ as above. For HTTPS issues, use http for localhost or accept self-signed certs in curl.
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
